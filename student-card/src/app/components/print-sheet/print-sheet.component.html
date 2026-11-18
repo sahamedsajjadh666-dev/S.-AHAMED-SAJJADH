@@ -1,0 +1,42 @@
+<section class="print-sheet" aria-label="CR80 Print Sheet">
+  <header class="print-sheet-header">
+    <div>
+      <h1 class="print-title">EduPass Campus — ISO/IEC 7810 ID-1 (CR80) Print Proof</h1>
+      <p class="print-subtitle">
+        {{ card().collegeName }} · {{ card().fullName }} · Reg. No.
+        <span class="tabular-nums">{{ card().regNo }}</span>
+      </p>
+    </div>
+    <span class="print-spec tabular-nums">85.60 mm × 53.98 mm · Scale 100%</span>
+  </header>
+
+  <div class="print-cards-row">
+    <div class="print-slot">
+      <div class="slot-label">FRONT FACE</div>
+      <div class="cut-guide">
+        <app-card-preview
+          [card]="card()"
+          [flipped]="false"
+          [interactive]="false"
+          [printMode]="true"
+        />
+      </div>
+    </div>
+
+    <div class="print-slot">
+      <div class="slot-label">BACK FACE</div>
+      <div class="cut-guide">
+        <app-card-preview
+          [card]="card()"
+          [flipped]="true"
+          [interactive]="false"
+          [printMode]="true"
+        />
+      </div>
+    </div>
+  </div>
+
+  <p class="print-footer-note">
+    Print at 100% actual size (disable "Fit to page") on PVC or 300gsm card stock. Trim along dashed CR80 registration marks.
+  </p>
+</section>

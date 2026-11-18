@@ -1,0 +1,47 @@
+<div class="theme-section">
+  <div class="theme-grid" role="radiogroup" aria-label="Institutional card theme">
+    @for (theme of themes; track theme.id) {
+      <button
+        type="button"
+        class="theme-tile"
+        [class.active]="selectedTheme() === theme.id"
+        [attr.aria-pressed]="selectedTheme() === theme.id"
+        (click)="selectTheme(theme.id)"
+      >
+        <span
+          class="swatch-bar"
+          [style.background]="'linear-gradient(135deg, ' + theme.startColor + ', ' + theme.endColor + ')'"
+        >
+          <span
+            class="swatch-accent"
+            [style.background-color]="theme.accentColor"
+          ></span>
+        </span>
+        <span class="theme-meta">
+          <span class="theme-name">{{ theme.label }}</span>
+          <span class="theme-desc">{{ theme.description }}</span>
+        </span>
+      </button>
+    }
+  </div>
+
+  <div class="holo-row">
+    <div class="holo-info">
+      <span class="holo-title">Holographic Security Foil</span>
+      <span class="holo-sub">
+        {{ holoEnabled() ? 'Enabled — interactive prismatic sheen' : 'Disabled — matte card finish' }}
+      </span>
+    </div>
+    <button
+      type="button"
+      role="switch"
+      class="holo-switch"
+      [class.on]="holoEnabled()"
+      [attr.aria-checked]="holoEnabled()"
+      aria-label="Toggle holographic security foil"
+      (click)="toggleHolo()"
+    >
+      <span class="holo-thumb"></span>
+    </button>
+  </div>
+</div>

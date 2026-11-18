@@ -1,0 +1,148 @@
+<div class="studio-shell no-print">
+  <!-- Top Bar -->
+  <header class="topbar">
+    <div class="topbar-brand">
+      <span class="brand-title">EduPass Campus</span>
+    </div>
+
+    <div class="topbar-context">
+      <span>Mohamed Sathak A.J. College of Engineering</span>
+      <span aria-hidden="true">·</span>
+      <span>Student Identity Studio</span>
+    </div>
+
+    <div class="topbar-actions">
+      <button
+        type="button"
+        class="topbar-btn secondary"
+        (click)="createNewStudent()"
+      >
+        + New Student
+      </button>
+      <button
+        type="button"
+        class="topbar-btn primary"
+        (click)="printCard()"
+      >
+        Print CR80 Sheet
+      </button>
+    </div>
+  </header>
+
+  <!-- 3-Column Workspace -->
+  <main class="workspace-grid">
+    <!-- Left Sidebar: Student Roster -->
+    <aside class="panel roster-panel" aria-label="Student Roster">
+      <div class="panel-header">
+        <h2 class="panel-title">Student Roster</h2>
+        <button
+          type="button"
+          class="text-action"
+          (click)="store.restoreSampleRoster()"
+        >
+          Restore Samples
+        </button>
+      </div>
+
+      <app-roster-list
+        [cards]="store.cards()"
+        [selectedId]="store.selectedId()"
+        [searchQuery]="store.searchQuery()"
+        (searchChange)="store.setSearchQuery($event)"
+        (selectCard)="selectStudent($event)"
+        (deleteCard)="store.deleteCard($event)"
+      />
+    </aside>
+
+    <!-- Center Stage: Live CR80 Card Preview -->
+    <section class="stage-panel" aria-label="CR80 Card Preview Stage">
+      <div class="stage-header">
+        <div>
+          <h1 class="stage-title">{{ store.draftCard().fullName || 'New Student' }}</h1>
+          <p class="stage-subtitle tabular-nums">
+            ISO/IEC 7810 ID-1 (CR80) · 85.60 × 53.98 mm · Reg. No. {{ store.draftCard().regNo }}
+          </p>
+        </div>
+
+        <div class="face-segmented" role="group" aria-label="Card face selector">
+          <button
+            type="button"
+            class="seg-btn"
+            [class.active]="!isFlipped()"
+            (click)="setFace(false)"
+          >
+            Front Face
+          </button>
+          <button
+            type="button"
+            class="seg-btn"
+            [class.active]="isFlipped()"
+            (click)="setFace(true)"
+          >
+            Back Face
+          </button>
+        </div>
+      </div>
+
+      <div class="stage-mat">
+        <app-card-preview
+          [card]="store.draftCard()"
+          [flipped]="isFlipped()"
+          [interactive]="true"
+          [printMode]="false"
+          (flipToggle)="toggleFlip()"
+        />
+
+        <p class="stage-hint">
+          Click card to flip Front / Back · Move pointer across card to preview holographic security foil
+        </p>
+      </div>
+
+      <div class="stage-footer">
+        @if (store.statusMessage()) {
+          <div class="status-toast" role="status">
+            {{ store.statusMessage() }}
+          </div>
+        } @else if (store.isDirty()) {
+          <div class="dirty-notice">
+            <span>
+              {{ store.isNewDraft() ? 'New unsaved student draft' : 'Unsaved edits in preview' }}
+            </span>
+            <button
+              type="button"
+              class="inline-save-btn"
+              (click)="store.saveDraft()"
+            >
+              Save Now
+            </button>
+          </div>
+        } @else {
+          <div class="synced-note">
+            Saved locally in browser storage
+          </div>
+        }
+      </div>
+    </section>
+
+    <!-- Right Inspector: Card Editor Form -->
+    <aside class="panel editor-panel" aria-label="Card Editor Inspector">
+      <div class="panel-header">
+        <h2 class="panel-title">Card Inspector</h2>
+        <span class="inspector-mode">
+          {{ store.isNewDraft() ? 'New Record' : 'Editing Saved Card' }}
+        </span>
+      </div>
+
+      <app-card-editor-form
+        [card]="store.draftCard()"
+        (cardChange)="store.updateDraft($event)"
+        (save)="store.saveDraft()"
+        (reset)="store.resetDraft()"
+        (print)="printCard()"
+      />
+    </aside>
+  </main>
+</div>
+
+<!-- Print-only Side-by-Side CR80 Sheet -->
+<app-print-sheet [card]="store.draftCard()" />

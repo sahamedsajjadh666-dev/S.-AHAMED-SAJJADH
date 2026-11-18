@@ -1,0 +1,6 @@
+{
+  "name": "EduPass Campus — MSAJCE Student ID Card System",
+  "description": "Frontend-only Angular studio for creating, customizing, managing, and printing ISO/IEC 7810 CR80 student ID cards for Mohamed Sathak A.J. College of Engineering.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

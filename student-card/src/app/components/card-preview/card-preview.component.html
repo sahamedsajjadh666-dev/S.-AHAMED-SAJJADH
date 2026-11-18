@@ -1,0 +1,197 @@
+<div
+  class="cr80-stage"
+  [class.print-mode]="printMode()"
+  [class.is-interactive]="interactive() && !printMode()"
+  [attr.data-theme]="card().theme"
+  [style.--theme-start]="themePalette().startColor"
+  [style.--theme-end]="themePalette().endColor"
+  [style.--theme-accent]="themePalette().accentColor"
+  [style.--mx.%]="pointerX()"
+  [style.--my.%]="pointerY()"
+  [attr.role]="interactive() && !printMode() ? 'button' : null"
+  [attr.tabindex]="interactive() && !printMode() ? 0 : null"
+  [attr.aria-label]="
+    interactive() && !printMode()
+      ? 'Student ID Card for ' + card().fullName + '. Activate to flip between front and back.'
+      : null
+  "
+  (click)="onCardClick()"
+  (keydown)="onCardKeydown($event)"
+  (pointermove)="onPointerMove($event)"
+  (pointerleave)="onPointerLeave()"
+>
+  <div
+    class="cr80-tilt"
+    [style.transform]="tiltTransform()"
+  >
+    <div
+      class="cr80-flipper"
+      [class.is-flipped]="flipped() && !printMode()"
+    >
+      <!-- FRONT FACE -->
+      @if (!printMode() || !flipped()) {
+        <section class="cr80-face cr80-front" aria-label="ID Card Front">
+          <div class="card-micro-pattern" aria-hidden="true"></div>
+
+          <!-- Header -->
+          <header class="front-header">
+            <div class="brand-lockup">
+              <div class="crest-badge" aria-hidden="true">MS</div>
+              <div class="college-copy">
+                <div class="college-name">{{ card().collegeName }}</div>
+                <div class="college-sub">{{ card().collegeSubtitle }}</div>
+              </div>
+            </div>
+            <div class="clg-phone-pill tabular-nums">
+              CLG NO: {{ card().collegePhone }}
+            </div>
+          </header>
+
+          <div class="accent-rule" aria-hidden="true"></div>
+
+          <!-- Front Body -->
+          <div class="front-body">
+            <div class="photo-col">
+              <div class="photo-frame">
+                @if (card().photoDataUrl) {
+                  <img
+                    [src]="card().photoDataUrl"
+                    [alt]="card().fullName + ' portrait'"
+                    class="student-photo"
+                  />
+                } @else {
+                  <div class="initials-fallback">
+                    <span>{{ initials() }}</span>
+                  </div>
+                }
+              </div>
+              <div class="student-type-pill">
+                {{ card().studentType }}
+              </div>
+            </div>
+
+            <div class="details-col">
+              <div class="identity-heading">
+                <h2 class="student-name">{{ card().fullName || 'Student Name' }}</h2>
+                <p class="student-dept">{{ card().department }}</p>
+              </div>
+
+              <div class="meta-grid">
+                <div class="meta-cell">
+                  <span class="meta-label">REG. NO.</span>
+                  <span class="meta-value mono tabular-nums">{{ card().regNo }}</span>
+                </div>
+                <div class="meta-cell">
+                  <span class="meta-label">YEAR &amp; BATCH</span>
+                  <span class="meta-value tabular-nums">{{ card().year }} • {{ card().batch }}</span>
+                </div>
+                <div class="meta-cell">
+                  <span class="meta-label">D.O.B.</span>
+                  <span class="meta-value mono tabular-nums">{{ card().dob }}</span>
+                </div>
+                <div class="meta-cell">
+                  <span class="meta-label">VALID THRU</span>
+                  <span class="meta-value mono tabular-nums">{{ card().validThru }}</span>
+                </div>
+                <div class="meta-cell">
+                  <span class="meta-label">STUDENT NO.</span>
+                  <span class="meta-value mono tabular-nums">{{ card().studentPhone }}</span>
+                </div>
+                <div class="meta-cell">
+                  <span class="meta-label">PARENT NO.</span>
+                  <span class="meta-value mono tabular-nums">{{ card().parentPhone }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Front Footer -->
+          <footer class="front-footer">
+            <span class="footer-title">OFFICIAL STUDENT IDENTITY CARD</span>
+            <span class="blood-badge tabular-nums">BLOOD: {{ card().bloodGroup }}</span>
+          </footer>
+
+          @if (card().holoEnabled && !printMode()) {
+            <div class="holo-foil" [class.active]="isHovering()" aria-hidden="true"></div>
+          }
+        </section>
+      }
+
+      <!-- BACK FACE -->
+      @if (!printMode() || flipped()) {
+        <section
+          class="cr80-face cr80-back"
+          [class.flat-back]="printMode() && flipped()"
+          aria-label="ID Card Back"
+        >
+          <!-- Magnetic Stripe -->
+          <div class="mag-stripe" aria-hidden="true">
+            <span class="mag-track"></span>
+          </div>
+
+          <div class="back-body">
+            <!-- Top Row: QR + Signatory & Contact Directory -->
+            <div class="back-top-row">
+              <div class="qr-panel">
+                <div class="qr-box">
+                  <app-qr-barcode [payload]="qrPayload()" mode="qr" />
+                </div>
+                <span class="qr-caption">SCAN TO VERIFY</span>
+              </div>
+
+              <div class="back-right-stack">
+                <div class="signatory-strip">
+                  <div class="signature-ink" aria-hidden="true">
+                    <svg viewBox="0 0 140 28" class="sig-svg">
+                      <path
+                        d="M8 21 C18 7, 25 24, 34 15 C40 9, 46 21, 55 14 C64 7, 74 20, 88 12 C98 7, 114 17, 132 11"
+                        fill="none"
+                        stroke="#0F294A"
+                        stroke-width="1.6"
+                        stroke-linecap="round"
+                      />
+                    </svg>
+                  </div>
+                  <span class="signatory-label">PRINCIPAL / AUTHORIZED SIGNATORY</span>
+                </div>
+
+                <div class="contact-directory">
+                  <div class="contact-col">
+                    <span class="dir-label">STUDENT NO.</span>
+                    <span class="dir-value mono tabular-nums">{{ card().studentPhone }}</span>
+                  </div>
+                  <div class="contact-col">
+                    <span class="dir-label">PARENT NO.</span>
+                    <span class="dir-value mono tabular-nums">{{ card().parentPhone }}</span>
+                  </div>
+                  <div class="contact-col">
+                    <span class="dir-label">COLLEGE NO.</span>
+                    <span class="dir-value mono tabular-nums">{{ card().collegePhone }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Address Row -->
+            <div class="address-row">
+              <span class="address-label">ADDRESS</span>
+              <span class="address-value">{{ card().address }}</span>
+            </div>
+
+            <!-- Bottom Barcode -->
+            <div class="barcode-section">
+              <div class="barcode-frame">
+                <app-qr-barcode [payload]="card().regNo" mode="barcode" />
+              </div>
+              <div class="barcode-caption mono tabular-nums">{{ card().regNo }}</div>
+            </div>
+          </div>
+
+          @if (card().holoEnabled && !printMode()) {
+            <div class="holo-foil holo-back" [class.active]="isHovering()" aria-hidden="true"></div>
+          }
+        </section>
+      }
+    </div>
+  </div>
+</div>

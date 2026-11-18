@@ -1,0 +1,76 @@
+.print-sheet {
+  display: none;
+}
+
+@media print {
+  .print-sheet {
+    display: flex;
+    flex-direction: column;
+    gap: 8mm;
+    width: 100%;
+    color: #0F172A;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .print-sheet-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    border-bottom: 0.3mm solid #CBD5E1;
+    padding-bottom: 3mm;
+  }
+
+  .print-title {
+    margin: 0;
+    font-size: 13pt;
+    font-weight: 700;
+  }
+
+  .print-subtitle {
+    margin: 1mm 0 0;
+    font-size: 9pt;
+    color: #475569;
+  }
+
+  .print-spec {
+    font-family: var(--font-mono);
+    font-size: 8.5pt;
+    color: #475569;
+  }
+
+  .print-cards-row {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 10mm;
+    align-items: flex-start;
+  }
+
+  .print-slot {
+    display: flex;
+    flex-direction: column;
+    gap: 2mm;
+  }
+
+  .slot-label {
+    font-family: var(--font-mono);
+    font-size: 7.5pt;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: #475569;
+  }
+
+  .cut-guide {
+    padding: 2mm;
+    border: 0.25mm dashed #94A3B8;
+    border-radius: 4mm;
+    display: inline-block;
+  }
+
+  .print-footer-note {
+    margin: 2mm 0 0;
+    font-size: 8pt;
+    color: #64748B;
+  }
+}

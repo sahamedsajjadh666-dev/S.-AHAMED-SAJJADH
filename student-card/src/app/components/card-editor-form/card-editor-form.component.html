@@ -1,0 +1,222 @@
+<form class="editor-form" (submit)="onSubmit($event)">
+  <!-- Portrait & Appearance -->
+  <section class="form-section">
+    <h3 class="section-heading">Portrait &amp; Card Finish</h3>
+    <app-avatar-uploader
+      [photoUrl]="card().photoDataUrl"
+      [initials]="initials()"
+      (photoChange)="onPhotoChange($event)"
+    />
+    <div class="spacer-sm"></div>
+    <app-theme-selector
+      [selectedTheme]="card().theme"
+      [holoEnabled]="card().holoEnabled"
+      (themeChange)="onThemeChange($event)"
+      (holoChange)="onHoloChange($event)"
+    />
+  </section>
+
+  <!-- Student Academic Identity -->
+  <section class="form-section">
+    <h3 class="section-heading">Student Identity</h3>
+
+    <div class="field-grid">
+      <label class="field span-2">
+        <span class="field-label">Full Name</span>
+        <input
+          type="text"
+          class="field-input"
+          [value]="card().fullName"
+          (input)="onTextInput('fullName', $event)"
+          placeholder="e.g. Aanya Sharma"
+          required
+        />
+      </label>
+
+      <label class="field">
+        <span class="field-label">Register No.</span>
+        <input
+          type="text"
+          class="field-input mono tabular-nums"
+          [value]="card().regNo"
+          (input)="onTextInput('regNo', $event)"
+          placeholder="311824104089"
+          required
+        />
+      </label>
+
+      <label class="field">
+        <span class="field-label">Residency / Type</span>
+        <select
+          class="field-input"
+          [value]="card().studentType"
+          (change)="onStudentTypeChange($event)"
+        >
+          @for (type of studentTypes; track type) {
+            <option [value]="type">{{ type }}</option>
+          }
+        </select>
+      </label>
+
+      <label class="field span-2">
+        <span class="field-label">Department / Programme</span>
+        <input
+          type="text"
+          list="msajce-departments"
+          class="field-input"
+          [value]="card().department"
+          (input)="onTextInput('department', $event)"
+          placeholder="B.E. Computer Science & Engineering"
+        />
+        <datalist id="msajce-departments">
+          @for (dept of departments; track dept) {
+            <option [value]="dept"></option>
+          }
+        </datalist>
+      </label>
+
+      <label class="field">
+        <span class="field-label">Year of Study</span>
+        <select
+          class="field-input"
+          [value]="card().year"
+          (change)="onTextInput('year', $event)"
+        >
+          @for (yr of years; track yr) {
+            <option [value]="yr">{{ yr }}</option>
+          }
+        </select>
+      </label>
+
+      <label class="field">
+        <span class="field-label">Batch</span>
+        <input
+          type="text"
+          class="field-input tabular-nums"
+          [value]="card().batch"
+          (input)="onTextInput('batch', $event)"
+          placeholder="2024–2028"
+        />
+      </label>
+
+      <label class="field">
+        <span class="field-label">Date of Birth</span>
+        <input
+          type="text"
+          class="field-input mono tabular-nums"
+          [value]="card().dob"
+          (input)="onTextInput('dob', $event)"
+          placeholder="DD-MM-YYYY"
+        />
+      </label>
+
+      <label class="field">
+        <span class="field-label">Valid Thru</span>
+        <input
+          type="text"
+          class="field-input mono tabular-nums"
+          [value]="card().validThru"
+          (input)="onTextInput('validThru', $event)"
+          placeholder="MM/YYYY"
+        />
+      </label>
+
+      <label class="field">
+        <span class="field-label">Blood Group</span>
+        <select
+          class="field-input"
+          [value]="card().bloodGroup"
+          (change)="onTextInput('bloodGroup', $event)"
+        >
+          @for (bg of bloodGroups; track bg) {
+            <option [value]="bg">{{ bg }}</option>
+          }
+        </select>
+      </label>
+
+      <label class="field">
+        <span class="field-label">College Phone</span>
+        <input
+          type="text"
+          class="field-input mono tabular-nums"
+          [value]="card().collegePhone"
+          (input)="onTextInput('collegePhone', $event)"
+          placeholder="044-2747 0021"
+        />
+      </label>
+    </div>
+  </section>
+
+  <!-- Contact & Institutional Details -->
+  <section class="form-section">
+    <h3 class="section-heading">Contact &amp; Campus Directory</h3>
+
+    <div class="field-grid">
+      <label class="field">
+        <span class="field-label">Student Phone</span>
+        <input
+          type="tel"
+          class="field-input mono tabular-nums"
+          [value]="card().studentPhone"
+          (input)="onTextInput('studentPhone', $event)"
+          placeholder="+91 98401 22334"
+        />
+      </label>
+
+      <label class="field">
+        <span class="field-label">Parent Phone</span>
+        <input
+          type="tel"
+          class="field-input mono tabular-nums"
+          [value]="card().parentPhone"
+          (input)="onTextInput('parentPhone', $event)"
+          placeholder="+91 98400 12345"
+        />
+      </label>
+
+      <label class="field span-2">
+        <span class="field-label">Residential / Hostel Address</span>
+        <textarea
+          rows="2"
+          class="field-input field-textarea"
+          [value]="card().address"
+          (input)="onTextInput('address', $event)"
+          placeholder="Street, Locality, City – PIN"
+        ></textarea>
+      </label>
+
+      <label class="field span-2">
+        <span class="field-label">Institution Name</span>
+        <input
+          type="text"
+          class="field-input"
+          [value]="card().collegeName"
+          (input)="onTextInput('collegeName', $event)"
+        />
+      </label>
+
+      <label class="field span-2">
+        <span class="field-label">Campus Subtitle</span>
+        <input
+          type="text"
+          class="field-input"
+          [value]="card().collegeSubtitle"
+          (input)="onTextInput('collegeSubtitle', $event)"
+        />
+      </label>
+    </div>
+  </section>
+
+  <!-- Sticky Action Footer -->
+  <div class="form-actions">
+    <button type="submit" class="btn btn-primary">
+      Save Card
+    </button>
+    <button type="button" class="btn btn-secondary" (click)="reset.emit()">
+      Reset
+    </button>
+    <button type="button" class="btn btn-outline" (click)="print.emit()">
+      Print CR80
+    </button>
+  </div>
+</form>

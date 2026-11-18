@@ -1,0 +1,40 @@
+@if (mode() === 'qr') {
+  <svg
+    class="qr-svg"
+    viewBox="-1 -1 23 23"
+    shape-rendering="crispEdges"
+    role="img"
+    [attr.aria-label]="'Verification QR code for ' + (payload() || 'student')"
+  >
+    <rect x="-1" y="-1" width="23" height="23" fill="#FFFFFF" />
+    @for (cell of qrCells(); track cell.x + '-' + cell.y) {
+      <rect
+        [attr.x]="cell.x"
+        [attr.y]="cell.y"
+        width="1"
+        height="1"
+        fill="#0F172A"
+      />
+    }
+  </svg>
+} @else {
+  <svg
+    class="barcode-svg"
+    [attr.viewBox]="'0 0 ' + barcodeData().width + ' 24'"
+    preserveAspectRatio="none"
+    shape-rendering="crispEdges"
+    role="img"
+    [attr.aria-label]="'Register number barcode for ' + (payload() || 'student')"
+  >
+    <rect x="0" y="0" [attr.width]="barcodeData().width" height="24" fill="#FFFFFF" />
+    @for (bar of barcodeData().bars; track bar.x) {
+      <rect
+        [attr.x]="bar.x"
+        y="1"
+        [attr.width]="bar.w"
+        height="22"
+        fill="#0F172A"
+      />
+    }
+  </svg>
+}

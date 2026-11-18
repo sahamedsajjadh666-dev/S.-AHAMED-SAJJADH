@@ -1,0 +1,101 @@
+<div class="roster-shell">
+  <div class="search-wrap">
+    <svg class="search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+      <circle cx="9" cy="9" r="5.75" stroke="currentColor" stroke-width="1.6" />
+      <path d="M13.5 13.5L17 17" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" />
+    </svg>
+    <input
+      type="search"
+      class="search-input"
+      [value]="searchQuery()"
+      (input)="onSearchInput($event)"
+      placeholder="Search name, reg. no., dept, phone…"
+      aria-label="Search student roster"
+    />
+    @if (searchQuery()) {
+      <button
+        type="button"
+        class="clear-btn"
+        (click)="clearSearch()"
+        aria-label="Clear search"
+      >
+        Clear
+      </button>
+    }
+  </div>
+
+  <div class="roster-summary tabular-nums">
+    <span>{{ filteredCards().length }} of {{ cards().length }} students</span>
+  </div>
+
+  @if (filteredCards().length > 0) {
+    <ul class="roster-items" role="list">
+      @for (card of filteredCards(); track card.id) {
+        <li
+          class="roster-item"
+          [class.selected]="selectedId() === card.id"
+          (click)="onSelect(card.id)"
+        >
+          <button
+            type="button"
+            class="item-select-btn"
+            [attr.aria-current]="selectedId() === card.id ? 'true' : null"
+          >
+            <span
+              class="item-avatar"
+              [style.background-color]="themeColorFor(card.theme)"
+            >
+              @if (card.photoDataUrl) {
+                <img
+                  [src]="card.photoDataUrl"
+                  [alt]="card.fullName"
+                  class="item-avatar-img"
+                />
+              } @else {
+                <span>{{ initialsFor(card.fullName) }}</span>
+              }
+            </span>
+
+            <span class="item-body">
+              <span class="item-name">{{ card.fullName }}</span>
+              <span class="item-reg mono tabular-nums">{{ card.regNo }}</span>
+              <span class="item-meta">
+                {{ card.department }} · {{ card.year }} · {{ card.studentType }}
+              </span>
+            </span>
+          </button>
+
+          <button
+            type="button"
+            class="delete-btn"
+            [attr.aria-label]="'Remove ' + card.fullName"
+            title="Remove student card"
+            (click)="onDelete(card.id, $event)"
+          >
+            <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <path
+                d="M4.5 4.5L11.5 11.5M11.5 4.5L4.5 11.5"
+                stroke="currentColor"
+                stroke-width="1.6"
+                stroke-linecap="round"
+              />
+            </svg>
+          </button>
+        </li>
+      }
+    </ul>
+  } @else {
+    <div class="empty-roster">
+      @if (cards().length === 0) {
+        <p class="empty-title">No student cards saved</p>
+        <p class="empty-copy">Create a new student card in the editor or restore the sample roster.</p>
+      } @else {
+        <p class="empty-title">No matching students</p>
+        <p class="empty-copy">No records matched "{{ searchQuery() }}".</p>
+        <button type="button" class="empty-action" (click)="clearSearch()">
+          Clear Filter
+        </button>
+      }
+    </div>
+  }
+</div>

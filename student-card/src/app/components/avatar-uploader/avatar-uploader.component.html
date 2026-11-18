@@ -1,0 +1,58 @@
+<div class="uploader-shell">
+  <div class="preview-frame">
+    @if (photoUrl()) {
+      <img
+        [src]="photoUrl()"
+        alt="Student portrait preview"
+        class="preview-img"
+      />
+    } @else {
+      <div class="preview-initials" aria-label="Default initials avatar">
+        {{ initials() }}
+      </div>
+    }
+  </div>
+
+  <div
+    class="drop-zone"
+    [class.dragging]="isDragging()"
+    (dragover)="onDragOver($event)"
+    (dragleave)="onDragLeave($event)"
+    (drop)="onDrop($event)"
+  >
+    <p class="drop-title">
+      @if (isProcessing()) {
+        Processing 300×360 portrait…
+      } @else {
+        Drop student photo or browse
+      }
+    </p>
+    <p class="drop-hint">JPG, PNG, or WebP · Auto-cropped to 3:4 ID ratio</p>
+
+    <div class="drop-actions">
+      <label class="upload-btn">
+        <input
+          type="file"
+          accept="image/jpeg,image/png,image/webp"
+          class="sr-only"
+          (change)="onFileSelected($event)"
+        />
+        <span>{{ photoUrl() ? 'Replace Photo' : 'Upload Photo' }}</span>
+      </label>
+
+      @if (photoUrl()) {
+        <button
+          type="button"
+          class="remove-btn"
+          (click)="removePhoto()"
+        >
+          Remove
+        </button>
+      }
+    </div>
+
+    @if (errorMessage()) {
+      <p class="error-text" role="alert">{{ errorMessage() }}</p>
+    }
+  </div>
+</div>
